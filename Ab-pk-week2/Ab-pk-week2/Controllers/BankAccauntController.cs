@@ -78,72 +78,8 @@ namespace Ab_pk_week2.Controllers
             }
         }
 
-        // GET: get BankAccaunt from id
-        [HttpGet("/GetBankAccountByIdFromService1/{id}")]
-        public ActionResult<BankAccount> Get_BA_ByIdFromService1([FromRoute] int id)
-        {
 
-            try
-            {
-                BankAccountService1 servis = new BankAccountService1(dbcontext);
-                Service _bankAccountService  = new Service(servis);
-
-                var account = _bankAccountService.GetAccountById(id);
-                if (account == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(account); //200
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-
-        // GET: get BankAccaunt from id
-        [HttpGet("/GetBankAccountByIdFromService2/{id}")]
-        public ActionResult<BankAccount> Get_BA_ByIdFromService2([FromRoute] int id)
-        {
-
-            try
-            {
-                BankAccountService2 servis = new BankAccountService2(dbcontext);
-                Service _bankAccountService = new Service(servis);
-
-                var account = _bankAccountService.GetAccountById(id);
-                if (account == null)
-                {
-                    return NotFound();
-                }
-
-                return Ok(account); //200
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
-
-        // GET: get BankAccaunt from id
-        [HttpGet("/GetBankAccountBalanceById/{id}")]
-        public ActionResult<string> GetBankAccountBalanceById([FromRoute] int id)
-        {
-            try
-            {
-                var account = dbcontext.BankAccounts.Where(x => x.accountId == id).SingleOrDefault();
-                if (account == null)
-                {
-                    return NotFound();
-                }
-                return Ok(account.GetFormattedBalance()); //200
-            }
-            catch (Exception ex)
-            {
-                return StatusCode(500, $"Internal server error: {ex.Message}");
-            }
-        }
+        
 
         // Post: create a BankAccaunt
         [HttpPost]
