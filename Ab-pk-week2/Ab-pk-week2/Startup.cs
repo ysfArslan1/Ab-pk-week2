@@ -1,4 +1,6 @@
 ﻿using Ab_pk_week2.DBOperations;
+using Ab_pk_week2.Middleware;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 
 namespace Ab_pk_week2
@@ -27,17 +29,19 @@ namespace Ab_pk_week2
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            // 
+            app.UseMiddleware<HttpLoggingMiddleware>();
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-
             app.UseHttpsRedirection();
             app.UseRouting();
             app.UseAuthorization();
             app.UseEndpoints(x => { x.MapControllers(); });
+
         }
     }
 }
