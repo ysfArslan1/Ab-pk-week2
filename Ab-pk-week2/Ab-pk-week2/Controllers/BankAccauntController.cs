@@ -1,5 +1,6 @@
 ﻿using Ab_pk_week2.DBOperations;
 using Ab_pk_week2.Models;
+using Ab_pk_week2.Services;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Principal;
@@ -16,6 +17,7 @@ namespace Ab_pk_week2.Controllers
         public BankAccauntController(BankDbContext bankDbContext)
         {
             this.dbcontext = bankDbContext;
+
         }
 
 
@@ -61,7 +63,6 @@ namespace Ab_pk_week2.Controllers
         [HttpGet("{id}")]
         public ActionResult<BankAccount> GetBankAccountById([FromRoute]int id)
         {
-
             try
             {
                 var account = dbcontext.BankAccounts.Where(x => x.accountId == id).SingleOrDefault();
@@ -69,8 +70,74 @@ namespace Ab_pk_week2.Controllers
                 {
                     return NotFound();
                 }
+                return Ok(account); //200
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // GET: get BankAccaunt from id
+        [HttpGet("/GetBankAccountByIdFromService1/{id}")]
+        public ActionResult<BankAccount> Get_BA_ByIdFromService1([FromRoute] int id)
+        {
+
+            try
+            {
+                BankAccountService1 servis = new BankAccountService1(dbcontext);
+                Service _bankAccountService  = new Service(servis);
+
+                var account = _bankAccountService.GetAccountById(id);
+                if (account == null)
+                {
+                    return NotFound();
+                }
 
                 return Ok(account); //200
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // GET: get BankAccaunt from id
+        [HttpGet("/GetBankAccountByIdFromService2/{id}")]
+        public ActionResult<BankAccount> Get_BA_ByIdFromService2([FromRoute] int id)
+        {
+
+            try
+            {
+                BankAccountService2 servis = new BankAccountService2(dbcontext);
+                Service _bankAccountService = new Service(servis);
+
+                var account = _bankAccountService.GetAccountById(id);
+                if (account == null)
+                {
+                    return NotFound();
+                }
+
+                return Ok(account); //200
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
+
+        // GET: get BankAccaunt from id
+        [HttpGet("/GetBankAccountBalanceById/{id}")]
+        public ActionResult<string> GetBankAccountBalanceById([FromRoute] int id)
+        {
+            try
+            {
+                var account = dbcontext.BankAccounts.Where(x => x.accountId == id).SingleOrDefault();
+                if (account == null)
+                {
+                    return NotFound();
+                }
+                return Ok(account.GetFormattedBalance()); //200
             }
             catch (Exception ex)
             {
@@ -177,28 +244,7 @@ namespace Ab_pk_week2.Controllers
             }
 
 
-            /*  // tek deger patch de
-            [ 
-               {
-                "path": "/accountHolder",
-                "op": "replace",
-                "value": "Mehmet C. patched"
-              }
-            ]
-            // coklu deger patch de
-            [
-              {
-                "path": "/accountHolder",
-                "op": "replace",
-                "value": "Mehmet C. patched"
-              },
-            {
-                "path": "/accountBalance",
-                "op": "replace",
-                "value": 34567
-              }
-            ]
-             */
+            
         }
 
     }
